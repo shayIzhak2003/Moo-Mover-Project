@@ -75,6 +75,19 @@ class MooMoverSystem:
         time.sleep(1)
         print("✅ Mix completed.")
         return total_mix
+    # פונקציה הבודקת הרם המעבר פנוי
+    def check_clear_path(self, shed: Shed):
+        print(f"🛤️ Checking clear path to Shed {shed.shed_id}...")
+        for attempt in range(3):
+            path_clear = random.choice([True, False, True])  # More likely to be clear
+            if path_clear:
+                print("✅ Path is clear.")
+                return True
+            else:
+                print("⚠️ Path is blocked. Attempting to clear...")
+                time.sleep(0.5)
+        print(f"❌ Failed to clear path to Shed {shed.shed_id}. Skipping distribution.")
+        return False
 
     # הוסף מים למזון כדי להקל על הפרות
     def add_water(self, mix: dict):
@@ -99,9 +112,9 @@ class MooMoverSystem:
         print("✅ Food pushed back.")
 
     # הפעל את כל תהליך ההאכלה במשך היום
+   
     def run_daily_cycle(self):
         print(f"\n===== 🚀 Starting Daily Feeding Cycle: {datetime.now().strftime('%Y-%m-%d')} =====")
-       # חזור על תהליך ההאכלה מספר פעמים במהלך היום
         for i in range(self.distributions_per_day):
             print(f"\n🔁 Feeding Round {i+1}/{self.distributions_per_day}")
             for shed in self.sheds:
@@ -110,7 +123,6 @@ class MooMoverSystem:
                 softened = self.add_water(mixed)
                 self.distribute_food(shed, softened)
 
-        # דחי את האוכל מספר פעמים ביום
         for i in range(self.food_pushes_per_day):
             print(f"\n🔁 Food Push Round {i+1}/{self.food_pushes_per_day}")
             for shed in self.sheds:
